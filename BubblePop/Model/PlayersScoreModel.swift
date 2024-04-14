@@ -6,10 +6,8 @@
 //
 
 import Foundation
-
-
-struct PlayersScore: Codable, Identifiable {
+struct PlayersInfo: Identifiable, Codable{
     var id = UUID()
     let playerName: String
-    var playerScroe: Int
+    var playerScore: Int
 }

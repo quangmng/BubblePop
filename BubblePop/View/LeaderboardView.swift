@@ -8,11 +8,27 @@
 import SwiftUI
 
 struct LeaderboardView: View {
+    @State private var playersScores: [PlayersInfo] = []
+    var playerName: String
+    var playerScore: Int
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack{
+            
+            Label("Hi Scores!", systemImage: "")
+                .foregroundStyle(.red)
+                .font(.title)
+            Spacer()
+            List(playersScores.sorted(by: {$0.playerScore > $1.playerScore}))
+            {
+                playerScore in
+                Text("\(playerScore.playerName):\(playerScore.playerScore)")
+            }
+            
+            Spacer()
+        }
     }
 }
 
 #Preview {
-    LeaderboardView()
+    LeaderboardView(playerName: "", playerScore: 0)
 }
