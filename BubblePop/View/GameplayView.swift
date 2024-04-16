@@ -13,7 +13,8 @@ struct GameplayView: View {
     @State private var isGameFinished: Bool = false
     var body: some View {
         VStack{
-            Text("Game Started!")
+            Label("Game Started!", systemImage: "")
+                .font(.title)
             /*Text("~~Game goes here~~")
             Text("*Game goes here*")
             Text("**Game goes here**")
@@ -29,9 +30,14 @@ struct GameplayView: View {
             }
             Spacer()
         }
-        .sheet(isPresented: $isGameFinished, content: {
-            LeaderboardView(playerName: playerName, playerScore: score)
+        .alert(isPresented: $isGameFinished, content: {
+            Alert(title: Text("Game Finished!"),  dismissButton: Alert.Button.cancel(Text("OK")))
         })
+        /*.sheet(isPresented: $isGameFinished, content: {
+            LeaderboardView(playerName: playerName, playerScore: score)
+                .padding(.top)
+        })*/
+        
     }
 }
 

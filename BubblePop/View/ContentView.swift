@@ -8,9 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var playerName: String = ""
+    @State private var playerName: String = UserDefaults.standard.string(forKey: "Anon") ?? ""
+    @State private var playNow: Bool = false
+    @State private var enterName: Bool = false
+    @State private var setupBubble: Bool = false
+    @State private var hiScore: Bool = false
     var body: some View {
-        NavigationView{
+        NavigationStack {
         ZStack {
             
             Image("mainScreen")
@@ -23,67 +27,49 @@ struct ContentView: View {
                         .fontWeight(.black)
                         .foregroundStyle(.mainMenu)
                     Spacer()
+                                    
                     
-                    NavigationLink(destination: GameplayView(playerName: "")) {
-                        Button(action: {}){
-                            Image(systemName: "gamecontroller.fill")
-                            Text("New Game!")
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.green)
-                        .font(.title)
-                    }
-                    
-                    
-                    /* Button(action: {
-                     
+                    Button(action: {
+                        playNow.toggle()
                      }, label: {
                      Image(systemName: "gamecontroller.fill")
                      Text("New Game!")
                      })
+                    .navigationDestination(isPresented: $playNow, destination:{ GameplayView(playerName: "")})
                      .buttonStyle(.borderedProminent)
                      .tint(.green)
                      .font(.title)
-                     
-                     .padding()*/
-                    HStack{
-                        NavigationLink(destination: SettingsView()) {
-                            Button(action: {}, label: {
+                     .padding()
+                    HStack {
+                            Button(action: {
+                                setupBubble.toggle()
+                                
+                            }, label: {
                                 Image(systemName: "gearshape.fill")
                                 Text("Settings")
                             })
+                            .navigationDestination(isPresented: $setupBubble, destination:{
+                                SettingsView()})
                             .buttonStyle(.borderedProminent)
                             .font(.title3)
-                            
                             .padding()
-                        }
                         
-                        NavigationLink(destination: SettingsView()) {
-                            Button(action: {}, label: {
+                        
+                        
+                            Button(action: {
+                                hiScore.toggle()
+                            }, label: {
                                 Image(systemName: "list.number")
                                 Text("Leaderboard")
                             })
+                            .navigationDestination(isPresented: $hiScore, destination:{ LeaderboardView(playerName: "", playerScore: 0)})
                             .buttonStyle(.borderedProminent)
                             .tint(.orange)
                             .font(.title3)
                         }
-                    }
-                    Spacer()
-                    /*NavigationLink(
-                     destination: GameplayView(),
-                     label:{Text("New Game!")
-                     .font(.title)
-                     .foregroundStyle(.green)
-                     })
-                     .padding(50)*/
                     
-                    NavigationLink(
-                        destination: LeaderboardView(playerName: "", playerScore: 0),
-                        label:{Text("Hi Scores")
-                                .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                                .foregroundStyle(.blue)
-                        })
                     Spacer()
+                  
                     Text("© 2024 [quangmng](https://github.com/quangmng)")
                         .foregroundStyle(.mainMenu)
                 }
