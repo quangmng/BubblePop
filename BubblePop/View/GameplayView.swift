@@ -9,35 +9,39 @@ import SwiftUI
 
 struct GameplayView: View {
     var playerName: String
+    
     @State private var score: Int = 0
     @State private var isGameFinished: Bool = false
+    @State private var showScore: Bool = false
     var body: some View {
-        VStack{
-            Label("Game Started!", systemImage: "")
-                .font(.title)
-            /*Text("~~Game goes here~~")
-            Text("*Game goes here*")
-            Text("**Game goes here**")
-            Text("***Game goes here***")
-            Text("`Game goes here`")
-            Text("[Game goes here](https://example.com)")*/
-            Spacer()
-            Text("\(playerName)")
-            Spacer()
-            Button("Finish Game"){
-                score = Int.random(in: 0...100)
-                isGameFinished = true
+        ZStack{
+            Color.mainMenu.ignoresSafeArea()
+            VStack{
+                Label("Game Started!", systemImage: "")
+                    .font(.title)
+                Spacer()
+                Text("Score: \(score) - Time Remaining: ")
+                Spacer()
+                Button("Finish Game"){
+                    score = Int.random(in: 0...100)
+                    isGameFinished = true
+                }
+                Spacer()
             }
-            Spacer()
+            
+            .alert(isPresented: $isGameFinished) {
+                Alert(title: Text("Time's Up!"), message: Text("Your Score was: \(score)"), dismissButton: .default(Text("OK")){
+                    showScore.toggle()
+                })
+            }
+            
+            
+            
+            .sheet(isPresented: $showScore, content: {
+             LeaderboardView(playerName: playerName, playerScore: score)
+             .padding(.top)
+             })
         }
-        .alert(isPresented: $isGameFinished, content: {
-            Alert(title: Text("Game Finished!"),  dismissButton: Alert.Button.cancel(Text("OK")))
-        })
-        /*.sheet(isPresented: $isGameFinished, content: {
-            LeaderboardView(playerName: playerName, playerScore: score)
-                .padding(.top)
-        })*/
-        
     }
 }
 

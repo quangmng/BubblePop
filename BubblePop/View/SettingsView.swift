@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @StateObject var leaderboardViewModel = LeaderboardViewModel()
+    
     @State private var timerInput = ""
     @State private var timerValue: Double = 0
     @State private var bubbleNum: Double = 0
-    @State private var playerName: String = ""
     
     var body: some View {
         

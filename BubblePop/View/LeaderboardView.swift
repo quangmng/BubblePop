@@ -38,7 +38,7 @@ struct LeaderboardView: View {
             }
         }
     }
-    private func savePlayerScore() {
+    func savePlayerScore() {
         let newPlayerScore = PlayersInfo(playerName: playerName, playerScore: playerScore)
         playersScores.append(newPlayerScore)
         let encoder = JSONEncoder()
