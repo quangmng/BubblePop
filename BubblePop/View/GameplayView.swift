@@ -25,22 +25,26 @@ struct GameplayView: View {
                 Button("Finish Game"){
                     score = Int.random(in: 0...100)
                     isGameFinished = true
+                    //savePlayerScore()
                 }
                 Spacer()
             }
             
             .alert(isPresented: $isGameFinished) {
-                Alert(title: Text("Time's Up!"), message: Text("Your Score was: \(score)"), dismissButton: .default(Text("OK")){
+                Alert(title: Text("Time's Up, \(playerName)!"), message: Text("Your Score was: \(score)"), dismissButton: .default(Text("OK")){
+                    
                     showScore.toggle()
                 })
             }
             
             
             
-            .sheet(isPresented: $showScore, content: {
+            .sheet(isPresented: $showScore){
+                
+            } content: {
              LeaderboardView(playerName: playerName, playerScore: score)
              .padding(.top)
-             })
+            }
         }
     }
 }

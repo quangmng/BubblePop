@@ -12,22 +12,27 @@ struct LeaderboardView: View {
     var playerName: String
     var playerScore: Int
     var body: some View {
-        VStack{
-            
-            Label("Leaderboard", systemImage: "list.number")
-                .foregroundStyle(.red)
-                .font(.largeTitle)
-            Spacer()
-            List(playersScores.sorted(by: {$0.playerScore > $1.playerScore}))
-            {
-                playerScore in
-                Text("Player \(playerScore.playerName):\(playerScore.playerScore)")
-            }
-            Spacer()
-                .onAppear(){
-                    loadPlayerScores()
-                    //savePlayerScores()
+        ZStack{
+            Color.mainMenu.ignoresSafeArea()
+            VStack{
+                Label("Leaderboard", systemImage: "list.number")
+                    .frame(alignment: .bottom)
+                    .foregroundStyle(.red)
+                    .font(.largeTitle)
+                    .fontWeight(.black)
+                    .padding(.top, 15)
+                Spacer()
+                List(playersScores.sorted(by: {$0.playerScore > $1.playerScore}).prefix(15)){
+                
+                    playerScore in
+                    Text("\(playerScore.playerName): \(playerScore.playerScore)")
+                    
                 }
+                    .onAppear(){
+                        loadPlayerScores()
+                        //savePlayerScore()
+                    }
+            }
         }
     }
     private func loadPlayerScores() {
