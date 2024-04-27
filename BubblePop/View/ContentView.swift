@@ -45,13 +45,34 @@ struct ContentView: View {
                     })
                     .alert("Please enter your name", isPresented: $askName) {
                         TextField("Name pls", text: $playerName)
-                        Button("OK", action: {
-                            playNow.toggle()
+                        Button("Cancel", action: {
+                            
                         })
-                        .onDisappear {UserDefaults.standard.set(playerName, forKey: "Anon")}
+                        Button("Play!", action: {
+                            if playerName.trimmingCharacters(in: .whitespaces).isEmpty {
+                                        // Generate a random alphanumeric string as the player name
+                                        playerName = randomAlphanumericString(length: 6)
+                                func randomAlphanumericString(length: Int) -> String {
+                                    let lettersAndNumbers = "abcdefghijklmnopqrstuvwxyz0123456789"
+                                    return String((0..<length).compactMap{ _ in lettersAndNumbers.randomElement() })
+                                    }
+                                }
+                            UserDefaults.standard.set(playerName, forKey: "PlayerName")
+                            playNow.toggle()
+                           
+                        })
+                        
                     }
+                    
                     //Modifiers for navigating to GameplayView() & customising button
-                    .navigationDestination(isPresented: $playNow, destination:{ GameplayView(playerName: $playerName, timerValue: $timerValue, score: playerScore, leaderboard: LeaderboardViewModel(), gameplay: GameplayViewModel(timeLimit: timerValue, bubbleNum: bubbleNum))})
+                    .navigationDestination(isPresented: $playNow, destination:{ GameplayView(
+                        playerName: $playerName,
+                        timerValue: $timerValue,
+                        score: bubbleNum, gameplay: GameplayViewModel(
+                            timeLimit: timerValue,
+                            bubbleNum: bubbleNum,
+                            leaderboard: LeaderboardViewModel(), playerName: playerName))
+                    })
                     .buttonStyle(.borderedProminent)
                     .tint(.green)
                     .font(.title)
@@ -77,7 +98,7 @@ struct ContentView: View {
                         .padding(.leading, 2)
                         
                         
-                        //Leaderboard button, with a sheet showing up whole screen.
+                        //Leaderboard button, with a sheet occupying whole screen.
                         Button(action: {
                             hiScore.toggle()
                         }, label: {

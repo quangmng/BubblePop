@@ -7,41 +7,56 @@
 
 import Foundation
 class LeaderboardViewModel: ObservableObject {
-    @Published var playerScores: [PlayersInfo] = []
     
+    @Published var playerScores: [PlayersInfo] = []
+    //Load top index (highest score)
+    var topScoreEntry: PlayersInfo? {
+            playerScores.sorted { $0.playerScore > $1.playerScore }.first
+        }
+    // Load player details
     func loadPlayers() {
         guard let data = UserDefaults.standard.data(forKey: "PlayerScores") else { return }
         let decoder = JSONDecoder()
-        if let decodedPlayerScores = try? decoder.decode([PlayersInfo].self, from: data) {
-            self.playerScores = decodedPlayerScores.sorted { $0.playerScore > $1.playerScore }
+        if let decoded = try? decoder.decode([PlayersInfo].self, from: data) {
+            playerScores = decoded.sorted { $0.playerScore > $1.playerScore }
         }
     }
-    //    func addNewScore(playerName: String, score: Int) {
-    //            let newScore = PlayersInfo(playerName: playerName, playerScore: score)
-    //            playerScores.append(newScore)
-    //            playerScores.sort { $0.playerScore > $1.playerScore }
-    //            if playerScores.count > 15 {
-    //                playerScores = Array(playerScores.prefix(15))
-    //            }
-    //            saveScores()
-    //        }
-    //    func saveScores() {
-    //            let encoder = JSONEncoder()
-    //            if let encoded = try? encoder.encode(playerScores) {
-    //                UserDefaults.standard.set(encoded, forKey: "PlayerScores")
-    //        }
-    //    }
-    //    func savePlayerScore() {
-    //        let newPlayerScore = PlayersInfo(playerName: playerName, playerScore: Int(playerScore))
-    //        playersScores.append(newPlayerScore)
-    //        let encoder = JSONEncoder()
-    //        if let encoded = try?
-    //            encoder.encode(playersScores) {
-    //            UserDefaults.standard.set(encoded, forKey: "PlayerScores")
-    //        }
-    //    }
-    //}
+    
+    // Save the current player's score at the end of the game
+    func savePlayerScore(playerName: String, score: Int) {
+        // Load the current leaderboard scores
+        loadPlayers()
+        
+        // Check if the player already has a score and update it if the new score is higher
+        if let index = playerScores.firstIndex(where: { $0.playerName == playerName }) {
+            if score > playerScores[index].playerScore {
+                playerScores[index].playerScore = score
+            }
+        } else {
+            // If the player isn't on the leaderboard, add them
+            let newPlayerScore = PlayersInfo(playerName: playerName, playerScore: score)
+            playerScores.append(newPlayerScore)
+        }
+        
+        // Sort the scores and keep the top scores only if necessary
+        playerScores.sort { $0.playerScore > $1.playerScore }
+        if playerScores.count > 15 {
+            playerScores = Array(playerScores.prefix(15))
+        }
+        
+        // Save the updated leaderboard
+        saveScores()
+    }
+    // Writing to a persistent file
+    private func saveScores() {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(playerScores) {
+            UserDefaults.standard.set(encoded, forKey: "PlayerScores")
+        }
+    }
 }
+
+
     
 
 

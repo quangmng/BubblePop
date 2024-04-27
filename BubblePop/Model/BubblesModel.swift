@@ -13,5 +13,5 @@ struct BubblesModel: Identifiable {
     var colour: Color
     var score: Int
     var position: CGPoint
-    let size: CGFloat = 60
+    static let size: CGFloat = 60
 }

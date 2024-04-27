@@ -11,7 +11,7 @@ import SwiftUI
 struct BubblePopApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView(playerName: "", timerValue: 0, playerScore: 0, bubbleNum: 0)
+            ContentView(playerName: "", timerValue: 60, playerScore: 0, bubbleNum: 15)
         }
     }
 }

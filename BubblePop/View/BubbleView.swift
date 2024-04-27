@@ -12,7 +12,7 @@ struct BubbleView: View {
     var body: some View {
         Circle()
             .fill(bubble.colour)
-            .frame(width: bubble.size, height: bubble.size)
+            .frame(width: BubblesModel.size, height: BubblesModel.size)
     }
 }
 
