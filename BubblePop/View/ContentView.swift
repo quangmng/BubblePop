@@ -8,17 +8,23 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var leaderboardViewModel = LeaderboardViewModel()
-    @State private var playerName: String = ""
+    //Declaring Vars
+    
+    @State var playerName: String
+    @State var timerValue: Double
+    @State var playerScore: Double
+    @State var bubbleNum: Double
     @State private var askName = false
     @State private var playNow: Bool = false
     @State private var enterName: Bool = false
     @State private var setupBubble: Bool = false
     @State private var hiScore: Bool = false
+    
+    
     var body: some View {
         NavigationStack{
             ZStack {
-                
+                //Title of game & background image
                 Image("mainScreen")
                     .resizable()
                     .scaledToFill()
@@ -30,7 +36,7 @@ struct ContentView: View {
                         .foregroundStyle(.mainMenu)
                     Spacer()
                     
-                    
+                    //New Game button, with .alert asking for player name and passes value to GameplayView()
                     Button(action: {
                         askName.toggle()
                     }, label: {
@@ -42,15 +48,17 @@ struct ContentView: View {
                         Button("OK", action: {
                             playNow.toggle()
                         })
-                        //.onDisappear {UserDefaults.standard.set(playerName, forKey: "Anon")}
+                        .onDisappear {UserDefaults.standard.set(playerName, forKey: "Anon")}
                     }
-                    .navigationDestination(isPresented: $playNow, destination:{ GameplayView(playerName: playerName)})
+                    //Modifiers for navigating to GameplayView() & customising button
+                    .navigationDestination(isPresented: $playNow, destination:{ GameplayView(playerName: $playerName, timerValue: $timerValue, score: playerScore, leaderboard: LeaderboardViewModel(), gameplay: GameplayViewModel(timeLimit: timerValue, bubbleNum: bubbleNum))})
                     .buttonStyle(.borderedProminent)
                     .tint(.green)
                     .font(.title)
                     .padding()
                     
                     HStack {
+                        //Settings button, with a sheet showing about halfway of the screen. Has a grabber on top for asthetics.
                         Button(action: {
                             setupBubble.toggle()
                             
@@ -58,29 +66,29 @@ struct ContentView: View {
                             Image(systemName: "gearshape.fill")
                             Text("Settings")
                         })
-                        /*.navigationDestination(isPresented: $setupBubble, destination:{
-                            SettingsView()})*/
+                        //Modifiers for sheet appearance & button customisations
                         .sheet(isPresented: $setupBubble){
                         } content: {
-                         SettingsView()
-                                .presentationDetents([.medium, .large])
+                            SettingsView(timerValue: $timerValue, bubbleNum: $bubbleNum)
+                                .presentationDetents([.height(500), .height(650)])
                         }
                         .buttonStyle(.borderedProminent)
                         .font(Font.system(size: 16))
                         .padding(.leading, 2)
                         
                         
-                        
+                        //Leaderboard button, with a sheet showing up whole screen.
                         Button(action: {
                             hiScore.toggle()
                         }, label: {
                             Image(systemName: "list.number")
                             Text("Leaderboard")
                         })
-                        /*.navigationDestination(isPresented: $hiScore, destination:{ LeaderboardView(playerName: "", playerScore: 0)})*/
+                        //Modifiers for sheet & button appearance
                         .sheet(isPresented: $hiScore){
                         } content: {
-                            LeaderboardView(playerName: "", playerScore: 0)
+                            LeaderboardView(playerName: $playerName, playerScore: $playerScore)
+                                
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(.orange)
@@ -89,7 +97,7 @@ struct ContentView: View {
                     }
                     
                     Spacer()
-                    
+                    // Footer text
                     Text("© 2024 [quangmng](https://github.com/quangmng)")
                         .foregroundStyle(.mainMenu)
                 }
@@ -101,7 +109,7 @@ struct ContentView: View {
 }
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View{
-        ContentView()
+        ContentView(playerName: "", timerValue: 60, playerScore: 0, bubbleNum: 15)
     }
 }
 

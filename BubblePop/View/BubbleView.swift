@@ -8,11 +8,18 @@
 import SwiftUI
 
 struct BubbleView: View {
+    var bubble: BubblesModel
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Circle()
+            .fill(bubble.colour)
+            .frame(width: bubble.size, height: bubble.size)
     }
 }
 
-#Preview {
-    BubbleView()
+struct BubbleView_Previews: PreviewProvider {
+    static var previews: some View {
+        // Create an example bubble for the preview
+        let exampleBubble = BubblesModel(colour: .black, score: 5, position: CGPoint(x: 100, y: 100))
+        BubbleView(bubble: exampleBubble)
+    }
 }

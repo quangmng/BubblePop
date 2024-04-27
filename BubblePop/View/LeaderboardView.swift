@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct LeaderboardView: View {
+    
     @State private var playersScores: [PlayersInfo] = []
-    var playerName: String
-    var playerScore: Int
+    @Binding var playerName: String
+    @Binding var playerScore: Double
+    
     var body: some View {
         ZStack{
             Color.mainMenu.ignoresSafeArea()
@@ -21,21 +23,24 @@ struct LeaderboardView: View {
                     .font(.largeTitle)
                     .fontWeight(.black)
                     .padding(.top, 15)
+                Text("(Shows top 15. Swipe down to close)")
+                    .foregroundStyle(.red)
                 Spacer()
                 List(playersScores.sorted(by: {$0.playerScore > $1.playerScore}).prefix(15)){
-                
+                    
                     playerScore in
                     Text("\(playerScore.playerName): \(playerScore.playerScore)")
                     
                 }
-                    .onAppear(){
-                        loadPlayerScores()
-                        //savePlayerScore()
-                    }
+                .onAppear(){
+                    loadPlayers()
+                    //savePlayerScore()
+                }
             }
         }
     }
-    private func loadPlayerScores() {
+
+    private func loadPlayers() {
         if let data = UserDefaults.standard.data(forKey: "PlayerScores") {
             let decoder = JSONDecoder()
             if let decodedPlayerScores = try? decoder.decode([PlayersInfo].self, from: data) {
@@ -43,8 +48,9 @@ struct LeaderboardView: View {
             }
         }
     }
-    func savePlayerScore() {
-        let newPlayerScore = PlayersInfo(playerName: playerName, playerScore: playerScore)
+}
+    /*func savePlayerScore() {
+        let newPlayerScore = PlayersInfo(playerName: playerName, playerScore: Int(playerScore))
         playersScores.append(newPlayerScore)
         let encoder = JSONEncoder()
         if let encoded = try?
@@ -52,8 +58,9 @@ struct LeaderboardView: View {
             UserDefaults.standard.set(encoded, forKey: "PlayerScores")
         }
     }
-}
+}*/
+
 
 #Preview {
-    LeaderboardView(playerName: "", playerScore: 0)
+    LeaderboardView(playerName: .constant(""), playerScore: .constant(0))
 }
