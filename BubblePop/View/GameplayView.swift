@@ -49,6 +49,7 @@ struct GameplayView: View{
                                 .onTapGesture {
                                     gameplay.bubbleTapped(bubble: bubble)
                                 }
+                            
                         }
                     }
                     .onAppear {

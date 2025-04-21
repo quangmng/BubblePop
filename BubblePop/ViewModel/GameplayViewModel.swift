@@ -195,7 +195,6 @@ class GameplayViewModel: ObservableObject{
                     bubbles.removeLast()
                 }
             }
-        //bubbles.removeLast(bubblesToRemove)
         
         // Determine the new number of bubbles to add, which can be up to the max set by the player
         let bubblesToAdd = Int.random(in: 1...Int(bubbleNum))
